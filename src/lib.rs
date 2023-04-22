@@ -10,6 +10,18 @@ pub fn check_callsite(_args: TokenStream, input: TokenStream) -> TokenStream {
     let mut orig_fn = parse_macro_input!(input as ItemFn);
     let mut shim_func = orig_fn.clone();
 
+    let is_no_mangle = {
+        let mut found = false;
+        for attr in &orig_fn.attrs {
+            if attr.meta.path().is_ident("no_mangle") {
+                found = true;
+                break;
+            }
+        }
+        found
+    };
+    assert!(is_no_mangle, "check_callsite fns must also be no_mangle");
+
     let new_orig_fn_ident = Ident::new(
         &format!("RAW_{}", orig_fn.sig.ident), 
         orig_fn.sig.ident.span()
