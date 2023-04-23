@@ -1,7 +1,7 @@
 ## Shim modifiers
-A list of shim types compatible with the `#[bios_call]` and `#[with_shim]` attributes.
+A list of shim types compatible with the `#[bios_call]` attribute and `#[with_shim]` macro.
 
-A lack of modifier produces the default behaviour - just routing through `BiosSafeShim`. Note that in this case, `#[with_shim]` is unnecessary at call sites.
+A lack of modifier produces the default behaviour - just routing through `BiosSafeShim`. Note that in this case, `with_shim!` is unnecessary at call sites.
 
 ### `expand64`
 Used by the `Encrypt_64bit` and `Decrypt_64bit` functions to make the shim responsible for priming registers `r1` and `r2` with the split 64-bit word passed in `r1`.
@@ -22,9 +22,8 @@ However, calls to any shims with modifiers and/or preloads require the use of `#
 
 For example (at the call-site):
 ```
-#[with_shim(0)]
-_ = MyAmazingShimmedFunc();
+_ = with_shim!(0, MyAmazingShimmedFunc, args...);
 ```
 
 The shim index maps to the shim order in the original `#[bios_call]` attribute.
-Note that index 0 is **not** the default shim, but the first custom shim. For the default shim, omit `#[with_shim]`.
+Note that index 0 is **not** the default shim, but the first custom shim. For the default shim, omit `with_shim!`.
