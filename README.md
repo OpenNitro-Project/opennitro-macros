@@ -18,7 +18,7 @@ _(Note the square brackets)_
 
 ## Generating multiple shims
 You can comma-separate shims if you need a mix of different permutations of modifiers+preloads, like so: `#[bios_call([expand64, arg0 = 0x4], expand64plus4)]`.
-However, calls to any shims with modifiers and/or preloads require the use of `#[with_shim]` at the call-site.
+However, calls to any shims with modifiers and/or preloads require the use of `with_shim!` at the call-site.
 
 For example (at the call-site):
 ```
