@@ -1,5 +1,5 @@
 ## Shim modifiers
-A list of shim types compatible with the `#[bios_call]` attribute and `#[with_shim]` macro.
+A list of shim types compatible with the `#[bios_call]` attribute and `with_shim!` macro.
 
 A lack of modifier produces the default behaviour - just routing through `BiosSafeShim`. Note that in this case, `with_shim!` is unnecessary at call sites.
 
