@@ -1,11 +1,12 @@
 /* Copyright (c) 2022 Benjamin John Mordaunt
  *     The OpenNitro Project
  */
-use proc_macro::TokenStream;
+use proc_macro::{TokenStream, Span};
+use syn::token::{Paren, Token};
 use std::collections::HashSet as Set;
 use quote::quote;
-use syn::{parse_macro_input, ItemFn, Ident, Block, Attribute, Token, LitStr};
-use syn::parse::{Parse, ParseStream, Result};
+use syn::{parse_macro_input, ItemFn, Ident, Block, Attribute, Token, LitStr, GenericArgument, parenthesized, Expr, LitInt, ExprLit, ExprCall, ExprPath, Path, parse_quote};
+use syn::parse::{Parse, ParseStream, Result, ParseBuffer};
 use syn::punctuated::Punctuated;
 
 struct Args {
@@ -91,4 +92,43 @@ pub fn bios_call(args: TokenStream, input: TokenStream) -> TokenStream {
         #shim_func
     };
     output_fn.into()
+}
+
+#[proc_macro]
+pub fn with_shim(input: TokenStream) -> TokenStream {
+    let mut args_pb = parse_macro_input!(input with Punctuated::<Expr, Token![,]>::parse_terminated).into_iter();
+    let shimidx = match args_pb.next() {
+        Some(Expr::Lit(x)) => {
+            match x.lit {
+                syn::Lit::Int(x) => x,
+                _ => panic!("Shim index literal not an integer"),
+            }
+        },
+        _ => panic!("Shim index not present or invalid"),
+    };
+    let fnname = match args_pb.next() {
+        Some(Expr::Path(x)) => {
+            if let Some(ident) = x.path.get_ident() {
+                let mut new_path: ExprPath = x.clone();
+                let new_ident = Ident::new(&format!("SHIM{}_{}", shimidx.base10_parse::<u32>().unwrap(), ident), ident.span());
+                new_path.path = parse_quote! { #new_ident };
+                new_path
+            } else {
+                panic!("Shim underlying function not valid identifier")
+            }
+        },
+        _ => panic!("Shim function name argument invalid")
+    };
+    let fn_args: Punctuated::<Expr, Token![,]> = args_pb.collect();
+
+    let fn_call = Expr::Call(ExprCall { 
+        attrs: vec![], 
+        func: Box::new(Expr::Path(fnname)), 
+        paren_token: Paren::default(), 
+        args: fn_args 
+    });
+
+    quote::quote! {
+        #fn_call
+    }.into()
 }
