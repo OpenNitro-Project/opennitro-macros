@@ -27,3 +27,19 @@ _ = with_shim!(0, MyAmazingShimmedFunc, args...);
 
 The shim index maps to the shim order in the original `#[bios_call]` attribute.
 Note that index 0 is **not** the default shim, but the first custom shim. For the default shim, omit `with_shim!`.
+
+## Shims in the linker script
+
+If for whatever reason, you're adding a new shimmed function, you will need to describe it in the linker script.
+Their names will have the following format
+
+Shim type       | Name prefix |
+--------------- | ----------- |
+No shim         | `RAW_`      |
+Default shim    | None        |
+`expand64`      | `EXP64_`    |
+`expand64plus4` | `EXP64P4_`  |
+
+Shims with preloads are expressed in the format given next. Their prefix is appended to the previous prefix. For example `EXP64_ARG04_FunctionName`.
+
+`ARG<register_number><decimal_value>_`
