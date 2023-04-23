@@ -74,7 +74,7 @@ pub fn bios_call(args: TokenStream, input: TokenStream) -> TokenStream {
     let shim_body: Block = syn::parse_quote! {{
         unsafe {
             asm!(
-                #expand64_or_empty,
+                #expand64_or_empty
                 "ldr ip, ={tgt}",
                 "b {biossafe}",
                 tgt = sym #new_orig_fn_ident,
