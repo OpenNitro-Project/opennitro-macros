@@ -42,6 +42,6 @@ Default shim    | None        |
 
 Shims with preloads are expressed in the format given next. Their prefix is appended to the previous prefix. For example `EXP64_ARG04_FunctionName`.
 
-`ARG<register_number><decimal_value>_`
+`ARG<register_number><unprefixed_hex_value>_`
 
 **WARNING**: There are clearly quite a few deficiencies in this approach (e.g. imagine the value being UINT32_MAX - ouch). This has been designed with the original BIOS in mind that doesn't run into these problems. You have been warned.
