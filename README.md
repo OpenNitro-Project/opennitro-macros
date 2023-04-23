@@ -31,17 +31,13 @@ Note that index 0 is **not** the default shim, but the first custom shim. For th
 ## Shims in the linker script
 
 If for whatever reason, you're adding a new shimmed function, you will need to describe it in the linker script.
-Their names will have the following format
+Their names will have the following format:
 
-Shim type       | Name prefix |
---------------- | ----------- |
-No shim         | `RAW_`      |
-Default shim    | None        |
-`expand64`      | `EXP64_`    |
-`expand64plus4` | `EXP64P4_`  |
+### Original function
+`RAW_<original_name>`
 
-Shims with preloads are expressed in the format given next. Their prefix is appended to the previous prefix. For example `EXP64_ARG04_FunctionName`.
+### Default shim
+`<original_name>`
 
-`ARG<register_number><unprefixed_hex_value>_`
-
-**WARNING**: There are clearly quite a few deficiencies in this approach (e.g. imagine the value being UINT32_MAX - ouch). This has been designed with the original BIOS in mind that doesn't run into these problems. You have been warned.
+### Custom shims
+`SHIM<shim_index>_<original_name>`
