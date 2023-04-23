@@ -119,16 +119,8 @@ pub fn with_shim(input: TokenStream) -> TokenStream {
         },
         _ => panic!("Shim function name argument invalid")
     };
-    let fn_args: Punctuated::<Expr, Token![,]> = args_pb.collect();
-
-    let fn_call = Expr::Call(ExprCall { 
-        attrs: vec![], 
-        func: Box::new(Expr::Path(fnname)), 
-        paren_token: Paren::default(), 
-        args: fn_args 
-    });
 
     quote::quote! {
-        #fn_call
+        #fnname
     }.into()
 }
