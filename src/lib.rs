@@ -111,7 +111,7 @@ pub fn with_shim(input: TokenStream) -> TokenStream {
             if let Some(ident) = x.path.get_ident() {
                 let mut new_path: ExprPath = x.clone();
                 let new_ident = Ident::new(&format!("SHIM{}_{}", shimidx.base10_parse::<u32>().unwrap(), ident), ident.span());
-                new_path.path = parse_quote! { #new_ident };
+                new_path.path = new_ident.into();
                 new_path
             } else {
                 panic!("Shim underlying function not valid identifier")
