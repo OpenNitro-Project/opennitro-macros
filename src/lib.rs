@@ -50,7 +50,7 @@ pub fn bios_call(args: TokenStream, input: TokenStream) -> TokenStream {
         if expand64 {
             syn::parse_quote! {
                 "mov r2, r1",
-                "add r1, r1, #4"
+                "add r1, r1, #4",
             }
         } else {
             syn::parse_quote! { }
